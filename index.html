@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="es" class="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentHub Admin Console</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hanken+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary": "#ffffff",
+            "border-light": "#e2e8f0",
+            "surface-container-low": "#eff4ff",
+            "on-primary-fixed-variant": "#003ea8",
+            "on-tertiary-fixed": "#360f00",
+            "on-secondary-fixed": "#07006c",
+            "success": "#10b981",
+            "primary-container": "#2563eb",
+            "secondary-fixed": "#e1e0ff",
+            "secondary-container": "#6063ee",
+            "surface": "#f8f9ff",
+            "outline": "#737686",
+            "tertiary": "#943700",
+            "surface-container-highest": "#d3e4fe",
+            "on-secondary-container": "#fffbff",
+            "surface-light": "#f8fafc",
+            "inverse-surface": "#213145",
+            "surface-container-high": "#dce9ff",
+            "warning": "#f59e0b",
+            "border-dark": "#1e293b",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#ffede6",
+            "secondary-fixed-dim": "#c0c1ff",
+            "primary-fixed-dim": "#b4c5ff",
+            "surface-container": "#e5eeff",
+            "error-container": "#ffdad6",
+            "primary-fixed": "#dbe1ff",
+            "on-secondary-fixed-variant": "#2f2ebe",
+            "surface-tint": "#0053db",
+            "surface-variant": "#d3e4fe",
+            "surface-bright": "#f8f9ff",
+            "on-error": "#ffffff",
+            "background": "#f8f9ff",
+            "on-surface-variant": "#434655",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#bc4800",
+            "inverse-on-surface": "#eaf1ff",
+            "on-primary-container": "#eeefff",
+            "on-surface": "#0b1c30",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed-dim": "#ffb596",
+            "outline-variant": "#c3c6d7",
+            "surface-dim": "#cbdbf5",
+            "inverse-primary": "#b4c5ff",
+            "on-tertiary-fixed-variant": "#7d2d00",
+            "on-primary-fixed": "#00174b",
+            "tertiary-fixed": "#ffdbcd",
+            "error": "#ef4444",
+            "primary": "#004ac6",
+            "on-primary": "#ffffff",
+            "secondary": "#4648d4",
+            "surface-dark": "#0f172a"
+          },
+          borderRadius: {
+            DEFAULT: "0.125rem",
+            lg: "0.25rem",
+            xl: "0.5rem",
+            full: "0.75rem"
+          },
+          spacing: {
+            "header-height": "64px",
+            "stack-md": "1rem",
+            "sidebar-width": "260px",
+            "gutter": "1.5rem",
+            "container-padding": "2rem",
+            "stack-sm": "0.5rem"
+          },
+          fontFamily: {
+            "nav-link": ["Inter"],
+            "body-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-sm": ["Hanken Grotesk"],
+            "label-code": ["JetBrains Mono"],
+            "display-lg": ["Hanken Grotesk"],
+            "body-md": ["Inter"],
+            "headline-md": ["Hanken Grotesk"]
+          },
+          fontSize: {
+            "nav-link": ["14px", { lineHeight: "1.5", fontWeight: "500" }],
+            "body-sm": ["12px", { lineHeight: "1.5", fontWeight: "400" }],
+            "body-lg": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+            "headline-sm": ["18px", { lineHeight: "1.4", fontWeight: "600" }],
+            "label-code": ["12px", { lineHeight: "1", fontWeight: "500" }],
+            "display-lg": ["36px", { lineHeight: "1.2", fontWeight: "700" }],
+            "body-md": ["14px", { lineHeight: "1.5", fontWeight: "400" }],
+            "headline-md": ["24px", { lineHeight: "1.3", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+    .glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
+    /* Skills expandibles con transición suave */
+    .skills-expandable {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, margin 0.3s ease;
+      opacity: 0;
+      margin-top: 0;
+    }
+    .skills-expandable.open {
+      max-height: 200px;
+      opacity: 1;
+      margin-top: 0.5rem;
+    }
+
+    /* Modal con escala y desenfoque */
+    .modal-scale {
+      transform: scale(0.92) translateY(10px);
+      opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+    }
+    .modal-scale.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+    #modal-overlay {
+      transition: opacity 0.25s ease;
+    }
+
+    /* Sidebar items */
+    .sidebar-item {
+      transition: background-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .sidebar-item:active {
+      transform: scale(0.97);
+    }
+
+    /* Secciones con fade */
+    .section-content {
+      display: none;
+    }
+    .section-content.active {
+      display: block;
+      animation: fadeSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Dropdown con animación */
+    .dropdown-menu {
+      transform-origin: top right;
+      animation: dropIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes dropIn {
+      from { opacity: 0; transform: scale(0.92) translateY(-4px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Hover suave en filas de tabla */
+    tbody tr {
+      transition: background-color 0.2s ease;
+    }
+
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .dark ::-webkit-scrollbar-thumb { background: #334155; }
+
+    /* Responsive: sidebar mobile */
+    @media (max-width: 1024px) {
+      .sidebar-mobile {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .sidebar-mobile.open {
+        transform: translateX(0);
+      }
+      /* Tablas con scroll horizontal suave */
+      .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+      }
+      /* Padding reducido en mobile */
+      .p-gutter {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+      }
+      /* Cards full width en mobile */
+      .grid-cols-1.sm\:grid-cols-2 > * {
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .font-display-lg {
+        font-size: 28px !important;
+      }
+      .px-gutter {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-surface dark:bg-surface-dark text-on-surface dark:text-inverse-on-surface transition-colors duration-300 min-h-screen">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-50 flex flex-col bg-surface-container-lowest dark:bg-surface-dark border-r border-border-light dark:border-border-dark shadow-sm dark:shadow-none sidebar-mobile lg:translate-x-0">
+    <div class="flex flex-col h-full py-6 px-4">
+      <!-- Brand -->
+      <div class="mb-8 px-2 flex items-center gap-3">
+        <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined fill text-on-primary text-2xl">smart_toy</span>
+        </div>
+        <div>
+          <h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">AgentHub</h1>
+          <p class="text-[10px] uppercase tracking-widest text-on-surface-variant dark:text-outline-variant font-bold">Admin Console</p>
+        </div>
+      </div>
+      <!-- Nav -->
+      <nav class="flex-1 space-y-1" id="sidebar-nav">
+        <a data-section="dashboard" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-900 dark:text-white font-bold bg-surface-container dark:bg-surface-container-high cursor-pointer">
+          <span class="material-symbols-outlined fill">dashboard</span>
+          <span class="font-nav-link text-nav-link">Dashboard</span>
+        </a>
+        <a data-section="usuarios" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+          <span class="material-symbols-outlined">group</span>
+          <span class="font-nav-link text-nav-link">Gestión de usuarios</span>
+        </a>
+        <a data-section="agentes" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+          <span class="material-symbols-outlined">smart_toy</span>
+          <span class="font-nav-link text-nav-link">Gestión de agentes</span>
+        </a>
+        <a data-section="skills" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+          <span class="material-symbols-outlined">bolt</span>
+          <span class="font-nav-link text-nav-link">Skills</span>
+        </a>
+        <a data-section="contrataciones" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+          <span class="material-symbols-outlined">handshake</span>
+          <span class="font-nav-link text-nav-link">Contrataciones</span>
+        </a>
+        <a data-section="errores" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+          <span class="material-symbols-outlined">terminal</span>
+          <span class="font-nav-link text-nav-link">Log de errores</span>
+        </a>
+      </nav>
+      <!-- Footer -->
+      <div class="mt-auto pt-4 border-t border-border-light dark:border-border-dark space-y-1">
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+          <span class="material-symbols-outlined">settings</span>
+          <span class="font-nav-link text-nav-link">Ajustes</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-error font-medium hover:bg-error/10 cursor-pointer">
+          <span class="material-symbols-outlined">logout</span>
+          <span class="font-nav-link text-nav-link">Cerrar sesión</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sidebar Overlay (mobile) -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
+  <!-- ===== MAIN WRAPPER ===== -->
+  <div class="lg:ml-[260px] min-h-screen flex flex-col transition-all duration-300">
+
+    <!-- ===== HEADER ===== -->
+    <header class="sticky top-0 w-full h-header-height z-30 bg-surface/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-border-light dark:border-border-dark flex justify-between items-center px-gutter">
+      <div class="flex items-center gap-4">
+        <button id="mobile-menu-btn" class="lg:hidden hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full p-2 text-primary dark:text-primary-fixed">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <div class="hidden md:flex items-center bg-surface-container-low dark:bg-surface-container-high rounded-full px-4 py-1.5 border border-border-light dark:border-border-dark">
+          <span class="material-symbols-outlined text-outline-variant text-lg">search</span>
+          <input class="bg-transparent border-none focus:ring-0 text-body-sm w-64 text-on-surface dark:text-slate-300 placeholder:text-outline-variant dark:placeholder:text-slate-500" placeholder="Buscar agentes, usuarios o logs..." type="text">
+        </div>
+        <h1 id="section-title-mobile" class="font-headline-sm text-headline-sm font-bold text-primary lg:hidden">Dashboard</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <button id="theme-toggle" class="hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full p-2 text-primary dark:text-primary-fixed transition-colors">
+          <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
+        </button>
+        <button class="relative hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full p-2 text-primary dark:text-primary-fixed transition-colors">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface dark:border-surface-dark"></span>
+        </button>
+        <div class="h-8 w-px bg-border-light dark:border-border-dark mx-1"></div>
+        <div class="flex items-center gap-3 pl-2">
+          <div class="text-right hidden sm:block">
+            <p class="text-body-sm font-bold leading-none dark:text-surface">Admin User</p>
+            <p class="text-[10px] text-on-surface-variant dark:text-outline-variant leading-none mt-1">Super Admin</p>
+          </div>
+          <div class="w-10 h-10 rounded-full border-2 border-primary-fixed ring-2 ring-surface dark:ring-surface-dark bg-primary/10 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary">person</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-grow p-gutter max-w-7xl mx-auto w-full">
+
+      <!-- ===== SECTION: DASHBOARD ===== -->
+      <section id="section-dashboard" class="section-content active">
+        <div class="mb-8">
+          <h2 class="font-display-lg text-display-lg text-on-surface dark:text-surface-bright mb-1">Dashboard</h2>
+          <p class="text-on-surface-variant dark:text-outline-variant">Welcome back. Here's what's happening with your AI agents today.</p>
+        </div>
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-gutter">
+          <div class="bg-surface-container-lowest dark:bg-slate-900 border border-border-light dark:border-border-dark p-6 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+              <div class="p-3 bg-primary-container/10 rounded-lg">
+                <span class="material-symbols-outlined text-primary dark:text-primary-fixed fill">payments</span>
+              </div>
+              <span class="text-success flex items-center gap-1 font-label-code text-label-code bg-success/10 px-2 py-0.5 rounded">
+                <span class="material-symbols-outlined text-sm">trending_up</span> 12.5%
+              </span>
+            </div>
+            <p class="text-on-surface-variant dark:text-outline-variant text-body-sm uppercase tracking-wider font-semibold mb-1">Ingresos del mes</p>
+            <p class="font-display-lg text-display-lg dark:text-surface" id="dash-revenue">$128,430.00</p>
+          </div>
+          <div class="bg-surface-container-lowest dark:bg-slate-900 border border-border-light dark:border-border-dark p-6 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+              <div class="p-3 bg-tertiary-container/10 rounded-lg">
+                <span class="material-symbols-outlined text-tertiary dark:text-tertiary-fixed-dim fill">price_check</span>
+              </div>
+              <span class="text-error flex items-center gap-1 font-label-code text-label-code bg-error/10 px-2 py-0.5 rounded">
+                <span class="material-symbols-outlined text-sm">trending_up</span> 3.2%
+              </span>
+            </div>
+            <p class="text-on-surface-variant dark:text-outline-variant text-body-sm uppercase tracking-wider font-semibold mb-1">Pérdidas/Descuentos</p>
+            <p class="font-display-lg text-display-lg dark:text-surface" id="dash-losses">$12,450.00</p>
+          </div>
+          <div class="bg-surface-container-lowest dark:bg-slate-900 border border-border-light dark:border-border-dark p-6 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+              <div class="p-3 bg-success/10 rounded-lg">
+                <span class="material-symbols-outlined text-success fill">smart_toy</span>
+              </div>
+              <span class="px-2 py-0.5 rounded-full bg-success/10 text-success text-[10px] font-bold uppercase">Óptimo</span>
+            </div>
+            <p class="text-on-surface-variant dark:text-outline-variant text-body-sm uppercase tracking-wider font-semibold mb-1">Agentes activos</p>
+            <p class="font-display-lg text-display-lg dark:text-surface" id="dash-active-agents">1,248</p>
+          </div>
+          <div class="bg-surface-container-lowest dark:bg-slate-900 border border-border-light dark:border-border-dark p-6 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+            <div class="flex justify-between items-start mb-4">
+              <div class="p-3 bg-error/10 rounded-lg">
+                <span class="material-symbols-outlined text-error fill">dangerous</span>
+              </div>
+              <span class="px-2 py-0.5 rounded-full bg-error/10 text-error text-[10px] font-bold uppercase">Crítico</span>
+            </div>
+            <p class="text-on-surface-variant dark:text-outline-variant text-body-sm uppercase tracking-wider font-semibold mb-1">Agentes fallando</p>
+            <p class="font-display-lg text-display-lg dark:text-surface" id="dash-failing-agents">14</p>
+          </div>
+        </div>
+        <!-- Chart + Recent Status -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+          <div class="lg:col-span-2 bg-surface-container-lowest dark:bg-slate-900 border border-border-light dark:border-border-dark p-6 rounded-xl shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+              <div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface dark:text-surface">Actividad Semanal</h3>
+                <p class="text-body-sm text-on-surface-variant dark:text-outline-variant">Tareas completadas vs. solicitudes</p>
+              </div>
+              <div class="flex gap-2">
+                <button class="px-3 py-1 text-xs font-bold rounded-full bg-surface-container dark:bg-slate-800 text-on-surface dark:text-surface">7 Días</button>
+                <button class="px-3 py-1 text-xs font-bold rounded-full text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low transition-colors">30 Días</button>
+              </div>
+            </div>
+            <div class="h-[280px] w-full flex items-end justify-between gap-2 pt-4">
+              <div class="flex flex-col items-center flex-1"><div class="w-full bg-primary/20 dark:bg-primary-container/20 rounded-t-lg h-[40%] relative"><div class="absolute bottom-0 w-full bg-primary h-[70%] rounded-t-lg transition-all duration-500 hover:h-[85%]"></div></div><span class="mt-2 text-[10px] font-label-code text-on-surface-variant">LUN</span></div>
+              <div class="flex flex-col items-center flex-1"><div class="w-full bg-primary/20 dark:bg-primary-container/20 rounded-t-lg h-[55%] relative"><div class="absolute bottom-0 w-full bg-primary h-[65%] rounded-t-lg"></div></div><span class="mt-2 text-[10px] font-label-code text-on-surface-variant">MAR</span></div>
+              <div class="flex flex-col items-center flex-1"><div class="w-full bg-primary/20 dark:bg-primary-container/20 rounded-t-lg h-[75%] relative"><div class="absolute bottom-0 w-full bg-primary h-[90%] rounded-t-lg"></div></div><span class="mt-2 text-[10px] font-label-code text-on-surface-variant">MIÉ</span></div>
+              <div class="flex flex-col items-center flex-1"><div class="w-full bg-primary/20 dark:bg-primary-container/20 rounded-t-lg h-[45%] relative"><div class="absolute bottom-0 w-full bg-primary h-[55%] rounded-t-lg"></div></div><span class="mt-2 text-[10px] font-label-code text-on-surface-variant">JUE</span></div>
+              <div class="flex flex-col items-center flex-1"><div class="w-full bg-primary/20 dark:bg-primary-container/20 rounded-t-lg h-[65%] relative"><div class="absolute bottom-0 w-full bg-primary h-[80%] rounded-t-lg"></div></div><span class="mt-2 text-[10px] font-label-code text-on-surface-variant">VIE</span></div>
+              <div class="flex flex-col items-center flex-1"><div class="w-full bg-primary/20 dark:bg-primary-container/20 rounded-t-lg h-[25%] relative"><div class="absolute bottom-0 w-full bg-primary h-[35%] rounded-t-lg"></div></div><span class="mt-2 text-[10px] font-label-code text-on-surface-variant">SÁB</span></div>
+              <div class="flex flex-col items-center flex-1"><div class="w-full bg-primary/20 dark:bg-primary-container/20 rounded-t-lg h-[40%] relative"><div class="absolute bottom-0 w-full bg-primary h-[50%] rounded-t-lg"></div></div><span class="mt-2 text-[10px] font-label-code text-on-surface-variant">DOM</span></div>
+            </div>
+          </div>
+          <div class="bg-surface-container-lowest dark:bg-slate-900 border border-border-light dark:border-border-dark p-6 rounded-xl shadow-sm">
+            <h3 class="font-headline-sm text-headline-sm text-on-surface dark:text-surface mb-6">Estado Reciente</h3>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-border-light dark:hover:border-border-dark">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-surface-container dark:bg-slate-800 flex items-center justify-center"><span class="material-symbols-outlined text-primary fill">support_agent</span></div>
+                  <div><p class="text-body-md font-bold dark:text-surface">Support_Bot_01</p><p class="text-body-sm text-on-surface-variant dark:text-outline-variant">LLM-v4.2</p></div>
+                </div>
+                <span class="px-2 py-1 rounded text-[10px] font-bold bg-success/10 text-success uppercase">Activo</span>
+              </div>
+              <div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-border-light dark:hover:border-border-dark">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-surface-container dark:bg-slate-800 flex items-center justify-center"><span class="material-symbols-outlined text-primary">code</span></div>
+                  <div><p class="text-body-md font-bold dark:text-surface">Dev_Assistant_A</p><p class="text-body-sm text-on-surface-variant dark:text-outline-variant">Python-3.11</p></div>
+                </div>
+                <span class="px-2 py-1 rounded text-[10px] font-bold bg-error/10 text-error uppercase">Fallando</span>
+              </div>
+              <div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-border-light dark:hover:border-border-dark">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-surface-container dark:bg-slate-800 flex items-center justify-center"><span class="material-symbols-outlined text-primary">analytics</span></div>
+                  <div><p class="text-body-md font-bold dark:text-surface">Data_Cruncher_X</p><p class="text-body-sm text-on-surface-variant dark:text-outline-variant">Neural-Engine</p></div>
+                </div>
+                <span class="px-2 py-1 rounded text-[10px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-500 uppercase">Inactivo</span>
+              </div>
+              <div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-border-light dark:hover:border-border-dark">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-surface-container dark:bg-slate-800 flex items-center justify-center"><span class="material-symbols-outlined text-primary">translate</span></div>
+                  <div><p class="text-body-md font-bold dark:text-surface">Translator_GPT</p><p class="text-body-sm text-on-surface-variant dark:text-outline-variant">Multi-Lingual</p></div>
+                </div>
+                <span class="px-2 py-1 rounded text-[10px] font-bold bg-success/10 text-success uppercase">Activo</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SECTION: USUARIOS ===== -->
+      <section id="section-usuarios" class="section-content">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h2 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Gestión de Usuarios</h2>
+            <p class="text-on-surface-variant dark:text-outline-variant font-body-md">Administra los accesos, planes y estados de los clientes de AgentHub.</p>
+          </div>
+          <button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+            <span class="material-symbols-outlined">person_add</span> Invitar Usuario
+          </button>
+        </div>
+        <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-xl border border-border-light dark:border-border-dark shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-surface-container-low dark:bg-slate-800/50">
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Nombre</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Email</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Plan</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Estado</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body" class="divide-y divide-border-light dark:divide-border-dark">
+                <!-- Rows rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SECTION: AGENTES ===== -->
+      <section id="section-agentes" class="section-content">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <h2 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Gestión de Agentes</h2>
+            <p class="text-on-surface-variant dark:text-outline-variant font-body-md">Supervisa el rendimiento y configura el comportamiento de tus agentes inteligentes.</p>
+          </div>
+          <button class="flex items-center justify-center gap-2 bg-primary hover:bg-primary-container text-white px-6 py-3 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-primary/20">
+            <span class="material-symbols-outlined">add</span> Desplegar nuevo agente
+          </button>
+        </div>
+        <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-xl border border-border-light dark:border-border-dark shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-surface-container-low dark:bg-slate-800/50">
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Nombre del agente</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Propietario</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Estado</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Skills</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="agents-table-body" class="divide-y divide-border-light dark:divide-border-dark">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SECTION: SKILLS ===== -->
+      <section id="section-skills" class="section-content">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h2 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Catálogo de Skills</h2>
+            <p class="text-on-surface-variant dark:text-outline-variant font-body-md">En AgentHub, una <strong>Skill</strong> es una unidad de competencia funcional que un agente puede ejecutar. Gestiona aquí las habilidades disponibles.</p>
+          </div>
+          <button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+            <span class="material-symbols-outlined">add</span> Nueva Skill
+          </button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="skills-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+
+      <!-- ===== SECTION: CONTRATACIONES ===== -->
+      <section id="section-contrataciones" class="section-content">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <h2 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Contrataciones de Agentes</h2>
+            <p class="text-on-surface-variant dark:text-outline-variant font-body-md">Gestión y seguimiento de licencias de servicios de IA.</p>
+          </div>
+          <button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined">add</span> Nueva Contratación
+          </button>
+        </div>
+        <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-xl border border-border-light dark:border-border-dark shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-surface-container-low dark:bg-slate-800/50">
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Cliente</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Agente</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Skills</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Fechas</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant text-right">Importe</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="contracts-table-body" class="divide-y divide-border-light dark:divide-border-dark">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SECTION: ERRORES ===== -->
+      <section id="section-errores" class="section-content">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <h2 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Log de Errores del Sistema</h2>
+            <p class="text-on-surface-variant dark:text-outline-variant font-body-md">Monitorización en tiempo real de fallos en ejecución de agentes e infraestructura.</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="flex items-center gap-2 px-4 py-2 border border-border-light dark:border-border-dark rounded-lg font-nav-link text-nav-link hover:bg-surface-container-low transition-all">
+              <span class="material-symbols-outlined">filter_list</span> Filtrar
+            </button>
+            <button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-nav-link text-nav-link hover:opacity-90 transition-all">
+              <span class="material-symbols-outlined">download</span> Exportar
+            </button>
+          </div>
+        </div>
+        <div class="bg-surface-container-lowest dark:bg-slate-900 rounded-xl border border-border-light dark:border-border-dark shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-surface-container-low dark:bg-slate-800/50">
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Timestamp</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Agente / Entidad</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Severidad</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant">Descripción</th>
+                  <th class="px-6 py-4 font-body-sm uppercase tracking-wider text-on-surface-variant text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="errors-table-body" class="divide-y divide-border-light dark:divide-border-dark">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="p-gutter border-t border-border-light dark:border-border-dark flex flex-col sm:flex-row justify-between items-center gap-4 text-on-surface-variant dark:text-outline-variant text-[11px] uppercase tracking-widest font-bold">
+      <div>© 2024 AgentHub Internal Systems</div>
+      <div class="flex gap-6">
+        <span class="hover:text-primary transition-colors cursor-pointer">System Status: <span class="text-success">Operational</span></span>
+        <span class="hover:text-primary transition-colors cursor-pointer">API Docs</span>
+        <span class="hover:text-primary transition-colors cursor-pointer">Privacy</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ===== MODAL CONTAINER ===== -->
+  <div id="modal-overlay" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6">
+    <div id="modal-backdrop" class="absolute inset-0 bg-on-surface/40 dark:bg-black/60 backdrop-blur-sm"></div>
+    <div id="modal-content" class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-border-light dark:border-border-dark modal-scale">
+      <!-- Modal Header -->
+      <div class="px-8 py-6 border-b border-border-light dark:border-border-dark flex items-center justify-between">
+        <div>
+          <h3 id="modal-title" class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Detalle</h3>
+          <p id="modal-subtitle" class="text-primary font-body-md font-medium">Información detallada</p>
+        </div>
+        <button id="modal-close-btn" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <!-- Modal Body -->
+      <div id="modal-body" class="px-8 py-8 space-y-8 max-h-[60vh] overflow-y-auto">
+        <!-- Rendered by JS -->
+      </div>
+      <!-- Modal Footer -->
+      <div class="px-8 py-6 bg-slate-50 dark:bg-slate-800/50 flex justify-end gap-4">
+        <button id="modal-cancel-btn" class="px-6 py-2 rounded-lg font-semibold text-on-surface-variant hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // ============================================
+    // DATA
+    // ============================================
+    const DATA = {
+      usuarios: [
+        { id: 1, nombre: 'Alejandro Moreno', email: 'alejandro.moreno@techcorp.com', plan: 'Enterprise', estado: 'Activo', empresa: 'TechCorp Inc.', fechaAlta: '12/05/2023', ultimoAcceso: 'Hace 2 horas' },
+        { id: 2, nombre: 'Beatriz Castillo', email: 'b.castillo@innovalabs.io', plan: 'Pro', estado: 'Pendiente', empresa: 'InnovaLabs', fechaAlta: '03/01/2024', ultimoAcceso: 'Hace 3 días' },
+        { id: 3, nombre: 'Sergio Vega', email: 's.vega@freelance.net', plan: 'Free', estado: 'Inactivo', empresa: 'Freelance', fechaAlta: '15/11/2023', ultimoAcceso: 'Hace 2 meses' },
+        { id: 4, nombre: 'Carmen López', email: 'carmen.lopez@datacore.com', plan: 'Enterprise', estado: 'Activo', empresa: 'DataCore Systems', fechaAlta: '20/01/2024', ultimoAcceso: 'Hace 1 hora' },
+        { id: 5, nombre: 'David Kim', email: 'd.kim@aistartup.io', plan: 'Pro', estado: 'Activo', empresa: 'AI Startup Inc.', fechaAlta: '08/03/2024', ultimoAcceso: 'Hace 30 min' }
+      ],
+      agentes: [
+        { id: 1, nombre: 'Aura-X1', propietario: 'Carlos Mendoza', estado: 'Activo', skills: ['Data Analysis', 'NLP', 'Predictive Modeling', 'SQL Expert'], promptSistema: 'Eres un asistente de análisis de datos altamente preciso. Procesa grandes volúmenes de datos y extrae patrones.' },
+        { id: 2, nombre: 'Nexus-7', propietario: 'Elena Rodriguez', estado: 'Fallando', skills: ['Image Recognition', 'Object Detection'], promptSistema: 'Eres un agente de visión computacional. Analiza imágenes en tiempo real.' },
+        { id: 3, nombre: 'Sentinel-Ops', propietario: 'Sistemas Centrales', estado: 'Inactivo', skills: ['Security Audit', 'Log Monitoring'], promptSistema: 'Eres un agente de seguridad. Monitorea accesos y detecta amenazas.' },
+        { id: 4, nombre: 'Support_Bot_01', propietario: 'Admin User', estado: 'Activo', skills: ['NLP', 'Ticket Resolver', 'Sentiment Analysis'], promptSistema: 'Eres un asistente de soporte. Resuelve tickets con empatía y precisión.' },
+        { id: 5, nombre: 'Data_Cruncher_X', propietario: 'Admin User', estado: 'Inactivo', skills: ['SQL Expert', 'Data Analysis', 'Big Data Processing'], promptSistema: 'Eres un motor de procesamiento de big data. Optimiza consultas y reportes.' },
+        { id: 6, nombre: 'Translator_GPT', propietario: 'Admin User', estado: 'Activo', skills: ['NLP', 'Multi-lingual Translation'], promptSistema: 'Eres un traductor multilingüe. Traduce manteniendo contexto y tono.' },
+        { id: 7, nombre: 'Dev_Assistant_A', propietario: 'Carlos Mendoza', estado: 'Fallando', skills: ['Code Analysis', 'Python Expert', 'Debugging'], promptSistema: 'Eres un asistente de desarrollo. Ayuda a depurar y optimizar código.' },
+        { id: 8, nombre: 'Financial Analyst', propietario: 'Elena Rodriguez', estado: 'Activo', skills: ['Predictive Modeling', 'Data Analysis', 'SQL Expert'], promptSistema: 'Eres un analista financiero. Genera reportes y predicciones de mercado.' }
+      ],
+      skills: [
+        { id: 1, nombre: 'Procesamiento de NLP', descripcion: 'Interpretación de lenguaje natural complejo y detección de sentimientos en tiempo real.', agentesActivos: 12, detalle: 'Versión 3.2 - Soporta 45+ idiomas' },
+        { id: 2, nombre: 'Consulta SQL Dinámica', descripcion: 'Traducción de lenguaje natural a consultas SQL optimizadas.', agentesActivos: 8, detalle: 'Compatible con MySQL, Postgres, BigQuery' },
+        { id: 3, nombre: 'Auditoría de Cumplimiento', descripcion: 'Verificación automática de políticas de seguridad y privacidad.', agentesActivos: 5, detalle: 'Certificado ISO 27001' },
+        { id: 4, nombre: 'Data Analysis', descripcion: 'Análisis exploratorio y visualización de datos estructurados.', agentesActivos: 10, detalle: 'Integración con Pandas, NumPy, Matplotlib' },
+        { id: 5, nombre: 'Image Recognition', descripcion: 'Reconocimiento y clasificación de imágenes mediante redes neuronales.', agentesActivos: 3, detalle: 'Modelo Vision Transformer v2' },
+        { id: 6, nombre: 'Ticket Resolver', descripcion: 'Resolución automatizada de tickets de soporte técnico.', agentesActivos: 6, detalle: 'Integración con Zendesk, Freshdesk' },
+        { id: 7, nombre: 'Predictive Modeling', descripcion: 'Modelos predictivos para pronóstico de tendencias y comportamiento.', agentesActivos: 5, detalle: 'Algoritmos: Random Forest, XGBoost, LSTM' },
+        { id: 8, nombre: 'Multi-lingual Translation', descripcion: 'Traducción automática con preservación de contexto y tono.', agentesActivos: 2, detalle: 'Soporta 30+ idiomas' }
+      ],
+      contratos: [
+        { id: 1, cliente: 'Global Finance S.A.', agente: 'Support_Bot_01', skillsContratadas: [{ nombre: 'NLP', precio: 2800 }, { nombre: 'Ticket Resolver', precio: 3150 }, { nombre: 'Sentiment Analysis', precio: 2000 }], fechaInicio: '15/01/2024', fechaFin: '15/01/2025', total: 12450 },
+        { id: 2, cliente: 'TechRetail Ltd.', agente: 'Data_Cruncher_X', skillsContratadas: [{ nombre: 'SQL Expert', precio: 2200 }, { nombre: 'Data Analysis', precio: 1800 }], fechaInicio: '02/02/2024', fechaFin: '02/08/2024', total: 8200 },
+        { id: 3, cliente: 'NexLogistics Inc.', agente: 'Sentinel-Ops', skillsContratadas: [{ nombre: 'Security Audit', precio: 3500 }, { nombre: 'Log Monitoring', precio: 2800 }], fechaInicio: '10/03/2024', fechaFin: '10/03/2025', total: 15300 },
+        { id: 4, cliente: 'HealthData Corp.', agente: 'Financial Analyst', skillsContratadas: [{ nombre: 'Predictive Modeling', precio: 3200 }, { nombre: 'Data Analysis', precio: 2500 }, { nombre: 'SQL Expert', precio: 2100 }], fechaInicio: '01/04/2024', fechaFin: '01/10/2024', total: 9800 },
+        { id: 5, cliente: 'EduLearn Platform', agente: 'Translator_GPT', skillsContratadas: [{ nombre: 'NLP', precio: 1800 }, { nombre: 'Multi-lingual Translation', precio: 2500 }], fechaInicio: '20/05/2024', fechaFin: '20/05/2025', total: 5600 }
+      ],
+      errores: [
+        { id: 1, timestamp: '2023-10-27 14:22:10', agente: 'Support_Bot_01', severidad: 'Crítico', tipo: 'Auth Error', descripcion: 'Failed to initialize API context: Token expired during auth handshake.', traza: 'Error 401: Token expired at 14:22:01. Retry attempt failed at 14:22:08. Stack: OAuth2Client.authenticate() -> TokenValidator.verify() -> ExpiredSignatureError.' },
+        { id: 2, timestamp: '2023-10-27 14:15:45', agente: 'Skill: WebSearcher', severidad: 'Advertencia', tipo: 'Timeout', descripcion: 'Latency threshold exceeded (3500ms) on endpoint /v1/search.', traza: 'Request ID: abc-123. Expected < 2000ms, got 3500ms. Suggested action: scale search workers.' },
+        { id: 3, timestamp: '2023-10-27 13:58:12', agente: 'Financial Analyst', severidad: 'Crítico', tipo: 'Memory Leak', descripcion: 'Memory leak detected during vector store embedding update.', traza: 'Memory usage: 2.4GB / 2GB limit. Heap dump saved. Embedding batch size may be too large.' },
+        { id: 4, timestamp: '2023-10-27 12:30:00', agente: 'Database Cluster', severidad: 'Inactivo', tipo: 'Backup Fail', descripcion: 'Automatic backup process interrupted. Rescheduling for 00:00 UTC.', traza: 'Exit code 1: Disk quota exceeded on /backup. Retry scheduled.' },
+        { id: 5, timestamp: '2023-10-27 11:45:33', agente: 'Dev_Assistant_A', severidad: 'Crítico', tipo: 'Seg Fault', descripcion: 'Segmentation fault during code execution in sandbox.', traza: 'Signal 11 at address 0x7f. Sandbox isolation triggered. Container restarted.' },
+        { id: 6, timestamp: '2023-10-27 10:20:00', agente: 'Aura-X1', severidad: 'Advertencia', tipo: 'Rate Limit', descripcion: 'API rate limit approaching 90% capacity.', traza: 'Current rate: 8900/10000 req/min. Trigger scaling alert at 95%.' }
+      ]
+    };
+
+    // ============================================
+    // RENDER FUNCTIONS
+    // ============================================
+    function getInitials(name) {
+      return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    }
+
+    function statusBadge(estado, extraClasses = '') {
+      const map = {
+        'Activo': 'bg-success/10 text-success border-success/20',
+        'Pendiente': 'bg-warning/10 text-warning border-warning/20',
+        'Inactivo': 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-600',
+        'Fallando': 'bg-error/10 text-error border-error/20',
+        'Crítico': 'bg-error/10 text-error border-error/20',
+        'Advertencia': 'bg-warning/10 text-warning border-warning/20'
+      };
+      const colors = map[estado] || 'bg-surface-container text-on-surface-variant';
+      return `<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${colors} ${extraClasses}"><span class="w-1.5 h-1.5 rounded-full ${estado === 'Activo' ? 'bg-success animate-pulse' : estado === 'Crítico' || estado === 'Fallando' ? 'bg-error' : estado === 'Advertencia' || estado === 'Pendiente' ? 'bg-warning' : 'bg-slate-400'}"></span>${estado}</span>`;
+    }
+
+    function planBadge(plan) {
+      const map = { 'Enterprise': 'bg-primary/10 text-primary', 'Pro': 'bg-secondary-fixed text-on-secondary-fixed', 'Free': 'bg-outline-variant text-on-surface-variant' };
+      return `<span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase ${map[plan] || 'bg-surface-container text-on-surface-variant'}">${plan}</span>`;
+    }
+
+    // ============================================
+    // USERS TABLE
+    // ============================================
+    function renderUsers() {
+      const tbody = document.getElementById('users-table-body');
+      tbody.innerHTML = DATA.usuarios.map(u => `
+        <tr class="hover:bg-surface-container-low dark:hover:bg-slate-800/20 transition-colors group">
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs">${getInitials(u.nombre)}</div>
+              <span class="font-body-md font-semibold dark:text-surface">${u.nombre}</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 font-body-md text-on-surface-variant">${u.email}</td>
+          <td class="px-6 py-4">${planBadge(u.plan)}</td>
+          <td class="px-6 py-4">${statusBadge(u.estado)}</td>
+          <td class="px-6 py-4 text-right relative">
+            <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" onclick="toggleDropdown('udrop-${u.id}')">
+              <span class="material-symbols-outlined">more_vert</span>
+            </button>
+            <div class="hidden absolute right-6 top-12 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-border-light dark:border-border-dark z-30 glass py-2 text-left dropdown-menu" id="udrop-${u.id}">
+              <button class="w-full px-4 py-2 text-sm hover:bg-primary-container/20 dark:hover:bg-primary/20 flex items-center gap-2 transition-colors" onclick="openUserModal(${u.id})">
+                <span class="material-symbols-outlined text-[18px]">visibility</span> Ver detalle
+              </button>
+              <button class="w-full px-4 py-2 text-sm text-error hover:bg-error/10 flex items-center gap-2 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">delete</span> Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openUserModal(id) {
+      const u = DATA.usuarios.find(x => x.id === id);
+      if (!u) return;
+      document.getElementById('modal-title').textContent = u.nombre;
+      document.getElementById('modal-subtitle').textContent = 'Información detallada del perfil';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Empresa</label><p class="text-body-lg font-semibold text-on-surface dark:text-surface">${u.empresa}</p></div>
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Email</label><p class="text-body-md text-on-surface dark:text-surface">${u.email}</p></div>
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Plan</label><p class="text-body-md text-on-surface dark:text-surface">${u.plan}</p></div>
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Estado</label><p class="text-body-md">${statusBadge(u.estado)}</p></div>
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Fecha de Alta</label><p class="text-body-md text-on-surface dark:text-surface">${u.fechaAlta}</p></div>
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Último Acceso</label><p class="text-body-md text-on-surface dark:text-surface">${u.ultimoAcceso}</p></div>
+        </div>
+        <div class="bg-surface-container-low dark:bg-slate-800/50 p-6 rounded-xl border border-dashed border-border-light dark:border-border-dark mt-6">
+          <h4 class="font-bold text-body-md mb-4 dark:text-surface">Actividad Mensual de Agentes</h4>
+          <div class="h-32 flex items-end justify-between gap-2">
+            ${[30,45,20,60,85,40,55].map(h => `<div class="w-full bg-primary/20 dark:bg-primary-container/20 rounded-t h-[${h}%]"><div class="w-full bg-primary rounded-t h-full opacity-60"></div></div>`).join('')}
+          </div>
+        </div>
+      `;
+      openModal();
+      closeDropdowns();
+    }
+
+    // ============================================
+    // AGENTS TABLE
+    // ============================================
+    function renderAgents() {
+      const tbody = document.getElementById('agents-table-body');
+      tbody.innerHTML = DATA.agentes.map(a => `
+        <tr class="hover:bg-surface-container-low dark:hover:bg-slate-800/20 transition-colors group">
+          <td class="px-6 py-5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-primary-container/20 dark:bg-primary-container/10 flex items-center justify-center font-bold text-primary">${getInitials(a.nombre)}</div>
+              <div><p class="font-headline-sm text-headline-sm dark:text-surface">${a.nombre}</p><p class="text-body-sm text-on-surface-variant">ID: #AG-${String(a.id).padStart(4,'0')}</p></div>
+            </div>
+          </td>
+          <td class="px-6 py-5 font-body-md dark:text-surface">${a.propietario}</td>
+          <td class="px-6 py-5">${statusBadge(a.estado)}</td>
+          <td class="px-6 py-5">
+            <div class="flex flex-wrap gap-1">
+              ${a.skills.slice(0, 2).map(s => `<span class="px-2 py-0.5 bg-surface-container dark:bg-slate-700 border border-border-light dark:border-border-dark rounded text-[11px] font-medium text-on-surface-variant">${s}</span>`).join('')}
+              ${a.skills.length > 2 ? `<button class="text-primary text-[11px] font-bold hover:underline" onclick="toggleSkills('skills-${a.id}')">+${a.skills.length - 2} más</button>` : ''}
+            </div>
+            <div class="skills-expandable mt-2 flex flex-wrap gap-1" id="skills-${a.id}">
+              ${a.skills.slice(2).map(s => `<span class="px-2 py-0.5 bg-surface-container dark:bg-slate-700 border border-border-light dark:border-border-dark rounded text-[11px] font-medium text-on-surface-variant">${s}</span>`).join('')}
+            </div>
+          </td>
+          <td class="px-6 py-5 text-right relative">
+            <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" onclick="toggleDropdown('adrop-${a.id}')">
+              <span class="material-symbols-outlined">more_vert</span>
+            </button>
+            <div class="hidden absolute right-6 top-14 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-border-light dark:border-border-dark z-30 glass py-2 text-left dropdown-menu" id="adrop-${a.id}">
+              <button class="w-full px-4 py-2 text-sm hover:bg-primary-container/20 dark:hover:bg-primary/20 flex items-center gap-2 transition-colors" onclick="openAgentModal(${a.id})">
+                <span class="material-symbols-outlined text-[18px]">settings</span> Configurar
+              </button>
+              <button class="w-full px-4 py-2 text-sm text-error hover:bg-error/10 flex items-center gap-2 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">delete</span> Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openAgentModal(id) {
+      const a = DATA.agentes.find(x => x.id === id);
+      if (!a) return;
+      document.getElementById('modal-title').textContent = a.nombre;
+      document.getElementById('modal-subtitle').textContent = 'Configuración del Agente - System Prompt';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Propietario</label><p class="text-body-lg font-semibold text-on-surface dark:text-surface">${a.propietario}</p></div>
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Estado</label><p class="text-body-md">${statusBadge(a.estado)}</p></div>
+          <div class="md:col-span-2"><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Skills</label><div class="flex flex-wrap gap-1">${a.skills.map(s => `<span class="px-2 py-0.5 bg-surface-container dark:bg-slate-700 border border-border-light dark:border-border-dark rounded text-[11px] font-medium">${s}</span>`).join('')}</div></div>
+        </div>
+        <div class="mb-6">
+          <label class="block text-on-surface-variant font-body-sm font-bold uppercase tracking-wider mb-2">System Prompt</label>
+          <div class="relative">
+            <textarea class="w-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl p-4 font-label-code text-label-code focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none" rows="6" readonly>${a.promptSistema}</textarea>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="block text-on-surface-variant font-body-sm font-bold uppercase tracking-wider mb-2">Temperatura</label><input class="w-full h-1.5 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary" type="range" min="0" max="100" value="20"></div>
+          <div><label class="block text-on-surface-variant font-body-sm font-bold uppercase tracking-wider mb-2">Modelo LLM</label>
+            <select class="w-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl px-4 py-2 text-body-md focus:ring-2 focus:ring-primary/20 outline-none">
+              <option>GPT-4 Turbo</option><option>Claude 3 Opus</option><option>Llama 3 70B</option>
+            </select>
+          </div>
+        </div>
+      `;
+      openModal();
+      closeDropdowns();
+    }
+
+    // ============================================
+    // SKILLS GRID
+    // ============================================
+    function renderSkills() {
+      const grid = document.getElementById('skills-grid');
+      grid.innerHTML = DATA.skills.map(s => `
+        <div class="group relative bg-surface-container-lowest dark:bg-slate-900 border border-border-light dark:border-border-dark rounded-xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1.5 hover:border-primary/20 dark:hover:border-primary/30">
+          <div class="flex justify-between items-start mb-4">
+            <div class="w-12 h-12 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-[32px]">psychology</span>
+            </div>
+            <div class="relative">
+              <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors" onclick="toggleDropdown('sdrop-${s.id}')">
+                <span class="material-symbols-outlined">more_vert</span>
+              </button>
+              <div class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-xl shadow-xl z-30 glass overflow-hidden dropdown-menu" id="sdrop-${s.id}">
+                <button class="w-full text-left px-4 py-3 hover:bg-primary-container/20 dark:hover:bg-primary/20 flex items-center gap-2 text-body-sm transition-colors" onclick="openSkillModal(${s.id})">
+                  <span class="material-symbols-outlined text-[18px]">visibility</span> Ver detalle
+                </button>
+                <button class="w-full text-left px-4 py-3 hover:bg-error/10 flex items-center gap-2 text-body-sm text-error transition-colors">
+                  <span class="material-symbols-outlined text-[18px]">delete</span> Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+          <h4 class="font-headline-sm text-headline-sm mb-2 dark:text-surface">${s.nombre}</h4>
+          <p class="text-body-sm text-on-surface-variant line-clamp-2 mb-6">${s.descripcion}</p>
+          <div class="flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-full border-2 border-white dark:border-slate-900 bg-primary text-[10px] flex items-center justify-center text-white font-bold">${s.agentesActivos}</div>
+              <span class="text-body-sm font-medium text-outline">Agentes</span>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${s.agentesActivos > 0 ? 'bg-success/10 text-success' : 'bg-slate-200 dark:bg-slate-700 text-slate-500'} uppercase tracking-wider">${s.agentesActivos > 0 ? 'Activa' : 'Inactiva'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openSkillModal(id) {
+      const s = DATA.skills.find(x => x.id === id);
+      if (!s) return;
+      document.getElementById('modal-title').textContent = s.nombre;
+      document.getElementById('modal-subtitle').textContent = 'Detalle de Skill';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="md:col-span-2"><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Descripción</label><p class="text-body-md text-on-surface dark:text-surface">${s.descripcion}</p></div>
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Agentes Activos</label><p class="text-body-lg font-semibold text-on-surface dark:text-surface">${s.agentesActivos}</p></div>
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Detalle Técnico</label><p class="text-body-md text-on-surface dark:text-surface">${s.detalle}</p></div>
+        </div>
+      `;
+      openModal();
+      closeDropdowns();
+    }
+
+    // ============================================
+    // CONTRACTS TABLE
+    // ============================================
+    function renderContracts() {
+      const tbody = document.getElementById('contracts-table-body');
+      tbody.innerHTML = DATA.contratos.map(c => `
+        <tr class="hover:bg-surface-container/50 dark:hover:bg-slate-800/20 transition-colors">
+          <td class="px-6 py-5">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs">${getInitials(c.cliente)}</div>
+              <div><p class="font-body-md font-bold text-on-surface dark:text-surface">${c.cliente}</p></div>
+            </div>
+          </td>
+          <td class="px-6 py-5">
+            <div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary fill">smart_toy</span><span class="font-body-md dark:text-surface">${c.agente}</span></div>
+          </td>
+          <td class="px-6 py-5">
+            <div class="flex flex-wrap gap-1">
+              ${c.skillsContratadas.slice(0, 2).map(s => `<span class="px-2 py-0.5 bg-surface-container dark:bg-slate-700 rounded text-[11px] font-medium text-on-surface-variant">${s.nombre}</span>`).join('')}
+              ${c.skillsContratadas.length > 2 ? `<span class="px-2 py-0.5 bg-surface-container dark:bg-slate-700 rounded text-[11px] font-medium">+${c.skillsContratadas.length - 2}</span>` : ''}
+            </div>
+          </td>
+          <td class="px-6 py-5">
+            <div class="font-body-sm"><p class="text-on-surface dark:text-surface">${c.fechaInicio}</p><p class="text-outline text-[11px]">Hasta: ${c.fechaFin}</p></div>
+          </td>
+          <td class="px-6 py-5 text-right font-label-code text-on-surface dark:text-surface font-bold">€${c.total.toFixed(2)}</td>
+          <td class="px-6 py-5 text-center relative">
+            <button class="p-2 text-primary hover:bg-primary/10 rounded-full transition-colors" onclick="toggleDropdown('cdrop-${c.id}')">
+              <span class="material-symbols-outlined">more_vert</span>
+            </button>
+            <div class="hidden absolute right-6 top-12 w-48 bg-white dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-xl shadow-xl z-30 glass overflow-hidden dropdown-menu" id="cdrop-${c.id}">
+              <button class="w-full text-left px-4 py-3 hover:bg-primary-container/20 dark:hover:bg-primary/20 flex items-center gap-2 text-body-sm transition-colors" onclick="openContractModal(${c.id})">
+                <span class="material-symbols-outlined text-[18px]">visibility</span> Ver detalle
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openContractModal(id) {
+      const c = DATA.contratos.find(x => x.id === id);
+      if (!c) return;
+      document.getElementById('modal-title').textContent = c.cliente;
+      document.getElementById('modal-subtitle').textContent = 'Desglose completo de contratación';
+      document.getElementById('modal-body').innerHTML = `
+        <div class="grid grid-cols-2 gap-6 mb-8">
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Cliente</label><p class="font-body-lg font-bold text-on-surface dark:text-surface">${c.cliente}</p></div>
+          <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Periodo</label><p class="font-body-lg text-on-surface dark:text-surface">${c.fechaInicio} - ${c.fechaFin}</p></div>
+        </div>
+        <div class="mb-8">
+          <p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold mb-3">Agente: ${c.agente}</p>
+          <div class="space-y-3">
+            ${c.skillsContratadas.map(s => `
+              <div class="flex justify-between items-center p-3 border border-border-light dark:border-border-dark rounded-lg">
+                <div class="flex items-center gap-3"><span class="material-symbols-outlined text-success">check_circle</span><span class="font-body-md dark:text-surface">${s.nombre}</span></div>
+                <span class="font-label-code text-on-surface dark:text-surface">€${s.precio.toFixed(2)}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="bg-primary/5 dark:bg-primary/10 p-4 rounded-xl border border-primary/10">
+          <div class="flex justify-between items-center">
+            <span class="font-headline-sm font-bold text-primary">Importe Total</span>
+            <span class="font-display-lg text-display-lg text-primary">€${c.total.toFixed(2)}</span>
+          </div>
+        </div>
+      `;
+      openModal();
+      closeDropdowns();
+    }
+
+    // ============================================
+    // ERRORS TABLE
+    // ============================================
+    function renderErrors() {
+      const tbody = document.getElementById('errors-table-body');
+      tbody.innerHTML = DATA.errores.map(e => `
+        <tr class="hover:bg-surface-container-lowest dark:hover:bg-slate-800/30 transition-colors group">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex flex-col">
+              <span class="font-label-code text-label-code text-on-surface dark:text-surface">${e.timestamp}</span>
+              <span class="text-[10px] text-on-surface-variant">ID: ERR-${String(e.id).padStart(4, '0')}</span>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full bg-primary-container/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[16px] text-primary">smart_toy</span>
+              </div>
+              <div><span class="block font-medium text-body-md dark:text-surface">${e.agente}</span><span class="text-body-sm text-on-surface-variant">${e.tipo}</span></div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">${statusBadge(e.severidad)}</td>
+          <td class="px-6 py-4"><p class="text-body-md text-on-surface-variant dark:text-outline-variant line-clamp-1 max-w-xs">${e.descripcion}</p></td>
+          <td class="px-6 py-4 whitespace-nowrap text-center">
+            <div class="flex items-center justify-center gap-2">
+              <button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all" onclick="openErrorModal(${e.id})" title="Ver detalle">
+                <span class="material-symbols-outlined">visibility</span>
+              </button>
+              <button class="p-2 text-success hover:bg-success/10 rounded-lg transition-all" title="Marcar como resuelto">
+                <span class="material-symbols-outlined">check_circle</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openErrorModal(id) {
+      const e = DATA.errores.find(x => x.id === id);
+      if (!e) return;
+      document.getElementById('modal-title').textContent = 'Detalle del Error';
+      document.getElementById('modal-subtitle').textContent = `ID: ERR-${String(e.id).padStart(4,'0')} • ${e.agente}`;
+      document.getElementById('modal-body').innerHTML = `
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="bg-surface-container-low dark:bg-slate-800 p-3 rounded-lg border border-border-light dark:border-border-dark">
+            <span class="text-body-sm text-on-surface-variant block mb-1">Timestamp</span>
+            <span class="font-label-code text-on-surface dark:text-surface">${e.timestamp}</span>
+          </div>
+          <div class="bg-surface-container-low dark:bg-slate-800 p-3 rounded-lg border border-border-light dark:border-border-dark">
+            <span class="text-body-sm text-on-surface-variant block mb-1">Severidad</span>
+            <span>${statusBadge(e.severidad)}</span>
+          </div>
+          <div class="bg-surface-container-low dark:bg-slate-800 p-3 rounded-lg border border-border-light dark:border-border-dark">
+            <span class="text-body-sm text-on-surface-variant block mb-1">Agente</span>
+            <span class="font-label-code text-on-surface dark:text-surface">${e.agente}</span>
+          </div>
+          <div class="bg-surface-container-low dark:bg-slate-800 p-3 rounded-lg border border-border-light dark:border-border-dark">
+            <span class="text-body-sm text-on-surface-variant block mb-1">Tipo</span>
+            <span class="font-label-code text-on-surface dark:text-surface">${e.tipo}</span>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Descripción</label>
+            <p class="text-body-md text-on-surface dark:text-surface">${e.descripcion}</p>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Traza Completa</label>
+            <div class="bg-surface-dark/5 dark:bg-white/5 border border-border-light dark:border-border-dark rounded-xl p-4 font-label-code text-label-code text-on-surface-variant whitespace-pre-wrap trace-scroll max-h-32 overflow-y-auto">${e.traza}</div>
+          </div>
+        </div>
+      `;
+      openModal();
+    }
+
+    // ============================================
+    // MODAL SYSTEM
+    // ============================================
+    function openModal() {
+      const overlay = document.getElementById('modal-overlay');
+      const content = document.getElementById('modal-content');
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+      overlay.style.opacity = '0';
+      setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+      setTimeout(() => content.classList.add('open'), 30);
+    }
+
+    function closeModal() {
+      const overlay = document.getElementById('modal-overlay');
+      const content = document.getElementById('modal-content');
+      content.classList.remove('open');
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+      }, 300);
+    }
+
+    // Modal close events
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+    document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
+    document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ============================================
+    // DROPDOWN SYSTEM
+    // ============================================
+    let activeDropdown = null;
+
+    function toggleDropdown(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      // Close others
+      document.querySelectorAll('[id^="udrop-"], [id^="adrop-"], [id^="sdrop-"], [id^="cdrop-"]').forEach(d => {
+        if (d.id !== id) d.classList.add('hidden');
+      });
+      el.classList.toggle('hidden');
+      activeDropdown = el.classList.contains('hidden') ? null : id;
+    }
+
+    function closeDropdowns() {
+      document.querySelectorAll('[id^="udrop-"], [id^="adrop-"], [id^="sdrop-"], [id^="cdrop-"]').forEach(d => d.classList.add('hidden'));
+      activeDropdown = null;
+    }
+
+    // Close dropdowns on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('[onclick^="toggleDropdown"]') && !e.target.closest('[id^="udrop-"], [id^="adrop-"], [id^="sdrop-"], [id^="cdrop-"]')) {
+        closeDropdowns();
+      }
+    });
+
+    // ============================================
+    // SKILLS EXPAND/COLLAPSE
+    // ============================================
+    function toggleSkills(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('open');
+    }
+
+    // ============================================
+    // THEME TOGGLE
+    // ============================================
+    function applyTheme(theme) {
+      const html = document.documentElement;
+      const icon = document.getElementById('theme-icon');
+      if (theme === 'dark') {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        icon.textContent = 'light_mode';
+      } else {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        icon.textContent = 'dark_mode';
+      }
+      localStorage.setItem('theme', theme);
+    }
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    });
+
+    // Init theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+    // ============================================
+    // NAVIGATION
+    // ============================================
+    const sections = ['dashboard', 'usuarios', 'agentes', 'skills', 'contrataciones', 'errores'];
+    const sectionTitles = {
+      dashboard: 'Dashboard',
+      usuarios: 'Gestión de Usuarios',
+      agentes: 'Gestión de Agentes',
+      skills: 'Skills',
+      contrataciones: 'Contrataciones',
+      errores: 'Log de Errores'
+    };
+
+    function navigateTo(section) {
+      // Hide all sections
+      document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+      // Show target
+      const target = document.getElementById(`section-${section}`);
+      if (target) target.classList.add('active');
+
+      // Update sidebar
+      document.querySelectorAll('#sidebar-nav a').forEach(el => {
+        el.classList.remove('text-slate-900', 'dark:text-white', 'font-bold', 'bg-surface-container', 'dark:bg-surface-container-high');
+        el.classList.add('text-on-surface-variant', 'dark:text-slate-300', 'font-medium', 'hover:bg-surface-container-low', 'dark:hover:bg-surface-container');
+      });
+      const active = document.querySelector(`#sidebar-nav a[data-section="${section}"]`);
+      if (active) {
+        active.classList.remove('text-on-surface-variant', 'dark:text-slate-300', 'font-medium', 'hover:bg-surface-container-low', 'dark:hover:bg-surface-container');
+        active.classList.add('text-slate-900', 'dark:text-white', 'font-bold', 'bg-surface-container', 'dark:bg-surface-container-high');
+      }
+
+      // Update mobile title
+      document.getElementById('section-title-mobile').textContent = sectionTitles[section] || section;
+
+      // Close mobile sidebar
+      closeMobileSidebar();
+
+      // Close any open dropdowns
+      closeDropdowns();
+    }
+
+    // Bind nav clicks
+    document.querySelectorAll('#sidebar-nav a').forEach(el => {
+      el.addEventListener('click', () => {
+        const section = el.dataset.section;
+        if (section) navigateTo(section);
+      });
+    });
+
+    // ============================================
+    // MOBILE SIDEBAR
+    // ============================================
+    function openMobileSidebar() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebar-overlay').classList.remove('hidden');
+    }
+
+    function closeMobileSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.add('hidden');
+    }
+
+    document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.classList.contains('open')) {
+        closeMobileSidebar();
+      } else {
+        openMobileSidebar();
+      }
+    });
+
+    document.getElementById('sidebar-overlay').addEventListener('click', closeMobileSidebar);
+
+    // ============================================
+    // INIT
+    // ============================================
+    renderUsers();
+    renderAgents();
+    renderSkills();
+    renderContracts();
+    renderErrors();
+    navigateTo('dashboard');
+  </script>
+</body>
+</html>
