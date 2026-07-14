@@ -106,127 +106,11 @@
       }
     }
   </script>
-  <style>
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      vertical-align: middle;
-    }
-    .material-symbols-outlined.fill {
-      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-    body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-    .glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-
-    /* Skills expandibles con transición suave */
-    .skills-expandable {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, margin 0.3s ease;
-      opacity: 0;
-      margin-top: 0;
-    }
-    .skills-expandable.open {
-      max-height: 200px;
-      opacity: 1;
-      margin-top: 0.5rem;
-    }
-
-    /* Modal con escala y desenfoque */
-    .modal-scale {
-      transform: scale(0.92) translateY(10px);
-      opacity: 0;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
-    }
-    .modal-scale.open {
-      transform: scale(1) translateY(0);
-      opacity: 1;
-    }
-    #modal-overlay {
-      transition: opacity 0.25s ease;
-    }
-
-    /* Sidebar items */
-    .sidebar-item {
-      transition: background-color 0.2s, color 0.2s, transform 0.15s;
-    }
-    .sidebar-item:active {
-      transform: scale(0.97);
-    }
-
-    /* Secciones con fade */
-    .section-content {
-      display: none;
-    }
-    .section-content.active {
-      display: block;
-      animation: fadeSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    @keyframes fadeSlideIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Dropdown con animación */
-    .dropdown-menu {
-      transform-origin: top right;
-      animation: dropIn 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    @keyframes dropIn {
-      from { opacity: 0; transform: scale(0.92) translateY(-4px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    /* Hover suave en filas de tabla */
-    tbody tr {
-      transition: background-color 0.2s ease;
-    }
-
-    /* Scrollbar personalizada */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    .dark ::-webkit-scrollbar-thumb { background: #334155; }
-
-    /* Responsive: sidebar mobile */
-    @media (max-width: 1024px) {
-      .sidebar-mobile {
-        transform: translateX(-100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .sidebar-mobile.open {
-        transform: translateX(0);
-      }
-      /* Tablas con scroll horizontal suave */
-      .overflow-x-auto {
-        -webkit-overflow-scrolling: touch;
-        scroll-behavior: smooth;
-      }
-      /* Padding reducido en mobile */
-      .p-gutter {
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-      }
-      /* Cards full width en mobile */
-      .grid-cols-1.sm\:grid-cols-2 > * {
-        min-width: 0;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .font-display-lg {
-        font-size: 28px !important;
-      }
-      .px-gutter {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-      }
-    }
-  </style>
 </head>
-<body class="bg-surface dark:bg-surface-dark text-on-surface dark:text-inverse-on-surface transition-colors duration-300 min-h-screen">
+<body class="bg-surface dark:bg-surface-dark text-on-surface dark:text-inverse-on-surface transition-colors duration-300 min-h-screen font-['Inter'] antialiased">
 
   <!-- ===== SIDEBAR ===== -->
-  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-50 flex flex-col bg-surface-container-lowest dark:bg-surface-dark border-r border-border-light dark:border-border-dark shadow-sm dark:shadow-none sidebar-mobile lg:translate-x-0">
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-50 flex flex-col bg-surface-container-lowest dark:bg-surface-dark border-r border-border-light dark:border-border-dark shadow-sm dark:shadow-none -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out">
     <div class="flex flex-col h-full py-6 px-4">
       <!-- Brand -->
       <div class="mb-8 px-2 flex items-center gap-3">
@@ -240,27 +124,27 @@
       </div>
       <!-- Nav -->
       <nav class="flex-1 space-y-1" id="sidebar-nav">
-        <a data-section="dashboard" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-slate-900 dark:text-white font-bold bg-surface-container dark:bg-surface-container-high cursor-pointer">
+        <a data-section="dashboard" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-900 dark:text-white font-bold bg-surface-container dark:bg-surface-container-high cursor-pointer transition-all duration-200 active:scale-95">
           <span class="material-symbols-outlined fill">dashboard</span>
           <span class="font-nav-link text-nav-link">Dashboard</span>
         </a>
-        <a data-section="usuarios" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+        <a data-section="usuarios" class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer transition-all duration-200 active:scale-95">
           <span class="material-symbols-outlined">group</span>
           <span class="font-nav-link text-nav-link">Gestión de usuarios</span>
         </a>
-        <a data-section="agentes" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+        <a data-section="agentes" class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer transition-all duration-200 active:scale-95">
           <span class="material-symbols-outlined">smart_toy</span>
           <span class="font-nav-link text-nav-link">Gestión de agentes</span>
         </a>
-        <a data-section="skills" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+        <a data-section="skills" class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer transition-all duration-200 active:scale-95">
           <span class="material-symbols-outlined">bolt</span>
           <span class="font-nav-link text-nav-link">Skills</span>
         </a>
-        <a data-section="contrataciones" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+        <a data-section="contrataciones" class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer transition-all duration-200 active:scale-95">
           <span class="material-symbols-outlined">handshake</span>
           <span class="font-nav-link text-nav-link">Contrataciones</span>
         </a>
-        <a data-section="errores" class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer">
+        <a data-section="errores" class="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant dark:text-slate-300 font-medium hover:bg-surface-container-low dark:hover:bg-surface-container cursor-pointer transition-all duration-200 active:scale-95">
           <span class="material-symbols-outlined">terminal</span>
           <span class="font-nav-link text-nav-link">Log de errores</span>
         </a>
@@ -322,9 +206,9 @@
     <main class="flex-grow p-gutter max-w-7xl mx-auto w-full">
 
       <!-- ===== SECTION: DASHBOARD ===== -->
-      <section id="section-dashboard" class="section-content active">
+      <section id="section-dashboard" class="section-content block">
         <div class="mb-8">
-          <h2 class="font-display-lg text-display-lg text-on-surface dark:text-surface-bright mb-1">Dashboard</h2>
+          <h2 class="font-display-lg text-display-lg text-primary dark:text-surface-bright mb-1">Dashboard</h2>
           <p class="text-on-surface-variant dark:text-outline-variant">Welcome back. Here's what's happening with your AI agents today.</p>
         </div>
         <!-- Metrics Grid -->
@@ -379,7 +263,7 @@
           <div class="lg:col-span-2 bg-surface-container-lowest dark:bg-slate-900 border border-border-light dark:border-border-dark p-6 rounded-xl shadow-sm">
             <div class="flex justify-between items-center mb-6">
               <div>
-                <h3 class="font-headline-sm text-headline-sm text-on-surface dark:text-surface">Actividad Semanal</h3>
+                <h3 class="font-headline-sm text-headline-sm text-primary dark:text-surface">Actividad Semanal</h3>
                 <p class="text-body-sm text-on-surface-variant dark:text-outline-variant">Tareas completadas vs. solicitudes</p>
               </div>
               <div class="flex gap-2">
@@ -398,7 +282,7 @@
             </div>
           </div>
           <div class="bg-surface-container-lowest dark:bg-slate-900 border border-border-light dark:border-border-dark p-6 rounded-xl shadow-sm">
-            <h3 class="font-headline-sm text-headline-sm text-on-surface dark:text-surface mb-6">Estado Reciente</h3>
+            <h3 class="font-headline-sm text-headline-sm text-primary dark:text-surface mb-6">Estado Reciente</h3>
             <div class="space-y-4">
               <div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-border-light dark:hover:border-border-dark">
                 <div class="flex items-center gap-3">
@@ -434,10 +318,10 @@
       </section>
 
       <!-- ===== SECTION: USUARIOS ===== -->
-      <section id="section-usuarios" class="section-content">
+      <section id="section-usuarios" class="section-content hidden">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h2 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Gestión de Usuarios</h2>
+            <h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-surface">Gestión de Usuarios</h2>
             <p class="text-on-surface-variant dark:text-outline-variant font-body-md">Administra los accesos, planes y estados de los clientes de AgentHub.</p>
           </div>
           <button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
@@ -465,10 +349,10 @@
       </section>
 
       <!-- ===== SECTION: AGENTES ===== -->
-      <section id="section-agentes" class="section-content">
+      <section id="section-agentes" class="section-content hidden">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <h2 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Gestión de Agentes</h2>
+            <h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-surface">Gestión de Agentes</h2>
             <p class="text-on-surface-variant dark:text-outline-variant font-body-md">Supervisa el rendimiento y configura el comportamiento de tus agentes inteligentes.</p>
           </div>
           <button class="flex items-center justify-center gap-2 bg-primary hover:bg-primary-container text-white px-6 py-3 rounded-xl font-bold transition-all active:scale-95 shadow-lg shadow-primary/20">
@@ -496,10 +380,10 @@
       </section>
 
       <!-- ===== SECTION: SKILLS ===== -->
-      <section id="section-skills" class="section-content">
+      <section id="section-skills" class="section-content hidden">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div>
-            <h2 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Catálogo de Skills</h2>
+            <h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-surface">Catálogo de Skills</h2>
             <p class="text-on-surface-variant dark:text-outline-variant font-body-md">En AgentHub, una <strong>Skill</strong> es una unidad de competencia funcional que un agente puede ejecutar. Gestiona aquí las habilidades disponibles.</p>
           </div>
           <button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
@@ -512,10 +396,10 @@
       </section>
 
       <!-- ===== SECTION: CONTRATACIONES ===== -->
-      <section id="section-contrataciones" class="section-content">
+      <section id="section-contrataciones" class="section-content hidden">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <h2 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Contrataciones de Agentes</h2>
+            <h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-surface">Contrataciones de Agentes</h2>
             <p class="text-on-surface-variant dark:text-outline-variant font-body-md">Gestión y seguimiento de licencias de servicios de IA.</p>
           </div>
           <button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 transition-opacity">
@@ -544,10 +428,10 @@
       </section>
 
       <!-- ===== SECTION: ERRORES ===== -->
-      <section id="section-errores" class="section-content">
+      <section id="section-errores" class="section-content hidden">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <h2 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">Log de Errores del Sistema</h2>
+            <h2 class="font-headline-md text-headline-md font-bold text-primary dark:text-surface">Log de Errores del Sistema</h2>
             <p class="text-on-surface-variant dark:text-outline-variant font-body-md">Monitorización en tiempo real de fallos en ejecución de agentes e infraestructura.</p>
           </div>
           <div class="flex gap-2">
@@ -596,7 +480,7 @@
   <!-- ===== MODAL CONTAINER ===== -->
   <div id="modal-overlay" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6">
     <div id="modal-backdrop" class="absolute inset-0 bg-on-surface/40 dark:bg-black/60 backdrop-blur-sm"></div>
-    <div id="modal-content" class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-border-light dark:border-border-dark modal-scale">
+    <div id="modal-content" class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-border-light dark:border-border-dark scale-95 translate-y-2 opacity-0 transition-all duration-300 ease-out">
       <!-- Modal Header -->
       <div class="px-8 py-6 border-b border-border-light dark:border-border-dark flex items-center justify-between">
         <div>
@@ -613,6 +497,7 @@
       </div>
       <!-- Modal Footer -->
       <div class="px-8 py-6 bg-slate-50 dark:bg-slate-800/50 flex justify-end gap-4">
+        <button id="modal-save-btn" class="hidden px-6 py-2 rounded-lg font-semibold bg-primary text-on-primary hover:opacity-90 transition-opacity">Guardar cambios</button>
         <button id="modal-cancel-btn" class="px-6 py-2 rounded-lg font-semibold text-on-surface-variant hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Cerrar</button>
       </div>
     </div>
@@ -713,7 +598,7 @@
             <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" onclick="toggleDropdown('udrop-${u.id}')">
               <span class="material-symbols-outlined">more_vert</span>
             </button>
-            <div class="hidden absolute right-6 top-12 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-border-light dark:border-border-dark z-30 glass py-2 text-left dropdown-menu" id="udrop-${u.id}">
+            <div class="hidden absolute right-6 top-12 w-48 bg-white/95 dark:bg-slate-800/95 rounded-lg shadow-xl border border-border-light dark:border-border-dark z-30 backdrop-blur-sm py-2 text-left origin-top-right transition-all duration-150" id="udrop-${u.id}">
               <button class="w-full px-4 py-2 text-sm hover:bg-primary-container/20 dark:hover:bg-primary/20 flex items-center gap-2 transition-colors" onclick="openUserModal(${u.id})">
                 <span class="material-symbols-outlined text-[18px]">visibility</span> Ver detalle
               </button>
@@ -747,6 +632,7 @@
           </div>
         </div>
       `;
+      hideAgentSaveAction();
       openModal();
       closeDropdowns();
     }
@@ -771,7 +657,7 @@
               ${a.skills.slice(0, 2).map(s => `<span class="px-2 py-0.5 bg-surface-container dark:bg-slate-700 border border-border-light dark:border-border-dark rounded text-[11px] font-medium text-on-surface-variant">${s}</span>`).join('')}
               ${a.skills.length > 2 ? `<button class="text-primary text-[11px] font-bold hover:underline" onclick="toggleSkills('skills-${a.id}')">+${a.skills.length - 2} más</button>` : ''}
             </div>
-            <div class="skills-expandable mt-2 flex flex-wrap gap-1" id="skills-${a.id}">
+            <div class="max-h-0 opacity-0 mt-0 overflow-hidden transition-all duration-300 ease-out flex flex-wrap gap-1" id="skills-${a.id}">
               ${a.skills.slice(2).map(s => `<span class="px-2 py-0.5 bg-surface-container dark:bg-slate-700 border border-border-light dark:border-border-dark rounded text-[11px] font-medium text-on-surface-variant">${s}</span>`).join('')}
             </div>
           </td>
@@ -779,7 +665,7 @@
             <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" onclick="toggleDropdown('adrop-${a.id}')">
               <span class="material-symbols-outlined">more_vert</span>
             </button>
-            <div class="hidden absolute right-6 top-14 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-border-light dark:border-border-dark z-30 glass py-2 text-left dropdown-menu" id="adrop-${a.id}">
+            <div class="hidden absolute right-6 top-14 w-48 bg-white/95 dark:bg-slate-800/95 rounded-lg shadow-xl border border-border-light dark:border-border-dark z-30 backdrop-blur-sm py-2 text-left origin-top-right transition-all duration-150" id="adrop-${a.id}">
               <button class="w-full px-4 py-2 text-sm hover:bg-primary-container/20 dark:hover:bg-primary/20 flex items-center gap-2 transition-colors" onclick="openAgentModal(${a.id})">
                 <span class="material-symbols-outlined text-[18px]">settings</span> Configurar
               </button>
@@ -806,7 +692,7 @@
         <div class="mb-6">
           <label class="block text-on-surface-variant font-body-sm font-bold uppercase tracking-wider mb-2">System Prompt</label>
           <div class="relative">
-            <textarea class="w-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl p-4 font-label-code text-label-code focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none" rows="6" readonly>${a.promptSistema}</textarea>
+            <textarea id="agent-prompt-input" class="w-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl p-4 font-label-code text-label-code focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-y min-h-[144px]" rows="6">${a.promptSistema}</textarea>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-4">
@@ -818,6 +704,8 @@
           </div>
         </div>
       `;
+      editingAgentId = id;
+      modalSaveBtn.classList.remove('hidden');
       openModal();
       closeDropdowns();
     }
@@ -837,7 +725,7 @@
               <button class="p-2 rounded-full hover:bg-surface-container-high transition-colors" onclick="toggleDropdown('sdrop-${s.id}')">
                 <span class="material-symbols-outlined">more_vert</span>
               </button>
-              <div class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-xl shadow-xl z-30 glass overflow-hidden dropdown-menu" id="sdrop-${s.id}">
+              <div class="hidden absolute right-0 mt-2 w-48 bg-white/95 dark:bg-slate-800/95 border border-border-light dark:border-border-dark rounded-xl shadow-xl z-30 backdrop-blur-sm overflow-hidden origin-top-right transition-all duration-150" id="sdrop-${s.id}">
                 <button class="w-full text-left px-4 py-3 hover:bg-primary-container/20 dark:hover:bg-primary/20 flex items-center gap-2 text-body-sm transition-colors" onclick="openSkillModal(${s.id})">
                   <span class="material-symbols-outlined text-[18px]">visibility</span> Ver detalle
                 </button>
@@ -872,6 +760,7 @@
           <div><label class="block text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Detalle Técnico</label><p class="text-body-md text-on-surface dark:text-surface">${s.detalle}</p></div>
         </div>
       `;
+      hideAgentSaveAction();
       openModal();
       closeDropdowns();
     }
@@ -906,7 +795,7 @@
             <button class="p-2 text-primary hover:bg-primary/10 rounded-full transition-colors" onclick="toggleDropdown('cdrop-${c.id}')">
               <span class="material-symbols-outlined">more_vert</span>
             </button>
-            <div class="hidden absolute right-6 top-12 w-48 bg-white dark:bg-slate-800 border border-border-light dark:border-border-dark rounded-xl shadow-xl z-30 glass overflow-hidden dropdown-menu" id="cdrop-${c.id}">
+            <div class="hidden absolute right-6 top-12 w-48 bg-white/95 dark:bg-slate-800/95 border border-border-light dark:border-border-dark rounded-xl shadow-xl z-30 backdrop-blur-sm overflow-hidden origin-top-right transition-all duration-150" id="cdrop-${c.id}">
               <button class="w-full text-left px-4 py-3 hover:bg-primary-container/20 dark:hover:bg-primary/20 flex items-center gap-2 text-body-sm transition-colors" onclick="openContractModal(${c.id})">
                 <span class="material-symbols-outlined text-[18px]">visibility</span> Ver detalle
               </button>
@@ -944,6 +833,7 @@
           </div>
         </div>
       `;
+      hideAgentSaveAction();
       openModal();
       closeDropdowns();
     }
@@ -971,13 +861,16 @@
           </td>
           <td class="px-6 py-4 whitespace-nowrap">${statusBadge(e.severidad)}</td>
           <td class="px-6 py-4"><p class="text-body-md text-on-surface-variant dark:text-outline-variant line-clamp-1 max-w-xs">${e.descripcion}</p></td>
-          <td class="px-6 py-4 whitespace-nowrap text-center">
-            <div class="flex items-center justify-center gap-2">
-              <button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all" onclick="openErrorModal(${e.id})" title="Ver detalle">
-                <span class="material-symbols-outlined">visibility</span>
+          <td class="px-6 py-4 whitespace-nowrap text-center relative">
+            <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" onclick="toggleDropdown('edrop-${e.id}')">
+              <span class="material-symbols-outlined">more_vert</span>
+            </button>
+            <div class="hidden absolute right-0 top-10 w-48 bg-white/95 dark:bg-slate-800/95 rounded-lg shadow-xl border border-border-light dark:border-border-dark z-30 backdrop-blur-sm py-2 text-left origin-top-right transition-all duration-150" id="edrop-${e.id}">
+              <button class="w-full px-4 py-2 text-sm hover:bg-primary-container/20 dark:hover:bg-primary/20 flex items-center gap-2 transition-colors" onclick="openErrorModal(${e.id})">
+                <span class="material-symbols-outlined text-[18px]">visibility</span> Ver detalle
               </button>
-              <button class="p-2 text-success hover:bg-success/10 rounded-lg transition-all" title="Marcar como resuelto">
-                <span class="material-symbols-outlined">check_circle</span>
+              <button class="w-full px-4 py-2 text-sm text-success hover:bg-success/10 flex items-center gap-2 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">check_circle</span> Marcar como resuelto
               </button>
             </div>
           </td>
@@ -1018,6 +911,7 @@
           </div>
         </div>
       `;
+      hideAgentSaveAction();
       openModal();
     }
 
@@ -1031,17 +925,22 @@
       overlay.classList.add('flex');
       overlay.style.opacity = '0';
       setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-      setTimeout(() => content.classList.add('open'), 30);
+      setTimeout(() => {
+        content.classList.remove('scale-95', 'translate-y-2', 'opacity-0');
+        content.classList.add('scale-100', 'translate-y-0', 'opacity-100');
+      }, 30);
     }
 
     function closeModal() {
       const overlay = document.getElementById('modal-overlay');
       const content = document.getElementById('modal-content');
-      content.classList.remove('open');
+      content.classList.remove('scale-100', 'translate-y-0', 'opacity-100');
+      content.classList.add('scale-95', 'translate-y-2', 'opacity-0');
       overlay.style.opacity = '0';
       setTimeout(() => {
         overlay.classList.add('hidden');
         overlay.classList.remove('flex');
+        hideAgentSaveAction();
       }, 300);
     }
 
@@ -1062,7 +961,7 @@
       const el = document.getElementById(id);
       if (!el) return;
       // Close others
-      document.querySelectorAll('[id^="udrop-"], [id^="adrop-"], [id^="sdrop-"], [id^="cdrop-"]').forEach(d => {
+      document.querySelectorAll('[id^="udrop-"], [id^="adrop-"], [id^="sdrop-"], [id^="cdrop-"], [id^="edrop-"]').forEach(d => {
         if (d.id !== id) d.classList.add('hidden');
       });
       el.classList.toggle('hidden');
@@ -1070,13 +969,13 @@
     }
 
     function closeDropdowns() {
-      document.querySelectorAll('[id^="udrop-"], [id^="adrop-"], [id^="sdrop-"], [id^="cdrop-"]').forEach(d => d.classList.add('hidden'));
+      document.querySelectorAll('[id^="udrop-"], [id^="adrop-"], [id^="sdrop-"], [id^="cdrop-"], [id^="edrop-"]').forEach(d => d.classList.add('hidden'));
       activeDropdown = null;
     }
 
     // Close dropdowns on outside click
     document.addEventListener('click', (e) => {
-      if (!e.target.closest('[onclick^="toggleDropdown"]') && !e.target.closest('[id^="udrop-"], [id^="adrop-"], [id^="sdrop-"], [id^="cdrop-"]')) {
+      if (!e.target.closest('[onclick^="toggleDropdown"]') && !e.target.closest('[id^="udrop-"], [id^="adrop-"], [id^="sdrop-"], [id^="cdrop-"], [id^="edrop-"]')) {
         closeDropdowns();
       }
     });
@@ -1086,7 +985,14 @@
     // ============================================
     function toggleSkills(id) {
       const el = document.getElementById(id);
-      if (el) el.classList.toggle('open');
+      if (!el) return;
+      const isOpen = el.classList.contains('max-h-52');
+      el.classList.toggle('max-h-52', !isOpen);
+      el.classList.toggle('opacity-100', !isOpen);
+      el.classList.toggle('mt-2', !isOpen);
+      el.classList.toggle('max-h-0', isOpen);
+      el.classList.toggle('opacity-0', isOpen);
+      el.classList.toggle('mt-0', isOpen);
     }
 
     // ============================================
@@ -1131,10 +1037,16 @@
 
     function navigateTo(section) {
       // Hide all sections
-      document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.section-content').forEach(el => {
+        el.classList.add('hidden');
+        el.classList.remove('block');
+      });
       // Show target
       const target = document.getElementById(`section-${section}`);
-      if (target) target.classList.add('active');
+      if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('block');
+      }
 
       // Update sidebar
       document.querySelectorAll('#sidebar-nav a').forEach(el => {
@@ -1169,22 +1081,43 @@
     // MOBILE SIDEBAR
     // ============================================
     function openMobileSidebar() {
-      document.getElementById('sidebar').classList.add('open');
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.remove('-translate-x-full');
+      sidebar.classList.add('translate-x-0');
       document.getElementById('sidebar-overlay').classList.remove('hidden');
     }
 
     function closeMobileSidebar() {
-      document.getElementById('sidebar').classList.remove('open');
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.remove('translate-x-0');
+      sidebar.classList.add('-translate-x-full');
       document.getElementById('sidebar-overlay').classList.add('hidden');
     }
 
     document.getElementById('mobile-menu-btn').addEventListener('click', () => {
       const sidebar = document.getElementById('sidebar');
-      if (sidebar.classList.contains('open')) {
+      if (sidebar.classList.contains('translate-x-0')) {
         closeMobileSidebar();
       } else {
         openMobileSidebar();
       }
+    });
+
+    const modalSaveBtn = document.getElementById('modal-save-btn');
+    let editingAgentId = null;
+
+    function hideAgentSaveAction() {
+      editingAgentId = null;
+      modalSaveBtn.classList.add('hidden');
+    }
+
+    modalSaveBtn.addEventListener('click', () => {
+      if (!editingAgentId) return;
+      const agent = DATA.agentes.find(item => item.id === editingAgentId);
+      const promptInput = document.getElementById('agent-prompt-input');
+      if (!agent || !promptInput) return;
+      agent.promptSistema = promptInput.value.trim();
+      closeModal();
     });
 
     document.getElementById('sidebar-overlay').addEventListener('click', closeMobileSidebar);
